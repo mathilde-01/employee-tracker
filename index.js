@@ -32,34 +32,34 @@ function menu() {
           "Update Employee Role",
           "Exit",
         ],
-        name: "addValues",
+        name: "menuOption",
       },
     ])
 
     .then((answers) => {
       // View department
-      if (answers.addValues === "View Department") {
+      if (answers.menuOption === "View Department") {
         db.query(`SELECT * FROM department`, (err, result) => {
           if (err) throw err;
           console.table(result);
           menu();
         });
         // View Role
-      } else if (answers.addValues === "View Role") {
+      } else if (answers.menuOption === "View Role") {
         db.query(`SELECT * FROM role`, (err, result) => {
           if (err) throw err;
           console.table(result);
           menu();
         });
         // View Employee
-      } else if (answers.addValues === "View Employee") {
+      } else if (answers.menuOption === "View Employee") {
         db.query(`SELECT * FROM employee`, (err, result) => {
           if (err) throw err;
           console.table(result);
           menu();
         });
         // Add Employee
-      } else if (answers.addValues === "Add Employee") {
+      } else if (answers.menuOption === "Add Employee") {
         addEmployee().then((data) => {
           db.query(
             `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`,
@@ -76,7 +76,7 @@ function menu() {
           );
         });
         // Add role
-      } else if (answers.addValues === "Add Role") {
+      } else if (answers.menuOption === "Add Role") {
         addRole().then((data) => {
           db.query(
             `INSERT INTO role (title, salary, department_id) VALUES (?,?,?)`,
@@ -94,7 +94,7 @@ function menu() {
           );
         });
         // Add department 
-    } else if (answers.addValues === "Add Department") {
+    } else if (answers.menuOption === "Add Department") {
         addDepartment().then((data) => {
           db.query(
             `INSERT INTO department(name) VALUES (?)`,
@@ -108,7 +108,24 @@ function menu() {
             }
           );
         });
-      } else if (answers.addValues === "Exit") {
+        // Update employee
+    } else if (answers.menuOption === "Update Employee") {
+        updateEmployee().then((data) => {
+          db.query(
+            `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?)`,
+            [
+                data.employeeFirstName,
+                data.employeeLastName,
+                data.departmentRole,
+            ],
+            (err, result) => {
+              if (err) throw err;
+              console.log("Updated Employee");
+              menu();
+            }
+          );
+        });
+      } else if (answers.menuOption === "Exit") {
         process.exit();
       } else {
         console.log("Error has occured", answers);
