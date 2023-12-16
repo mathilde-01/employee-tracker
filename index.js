@@ -80,12 +80,7 @@ function menu() {
         addRole().then((data) => {
           db.query(
             `INSERT INTO role (title, salary, department_id) VALUES (?,?,?)`,
-            [
-              data.roleName,
-              data.salaryRole,
-              data.employeeRole,
-              data.employeeManager,
-            ],
+            [data.roleName, data.roleSalary, data.roleDepartment],
             (err, result) => {
               if (err) throw err;
               console.log("Added Employee");
@@ -93,14 +88,12 @@ function menu() {
             }
           );
         });
-        // Add department 
-    } else if (answers.menuOption === "Add Department") {
+        // Add department
+      } else if (answers.menuOption === "Add Department") {
         addDepartment().then((data) => {
           db.query(
             `INSERT INTO department(name) VALUES (?)`,
-            [
-              data.departmentName,
-            ],
+            [data.departmentName],
             (err, result) => {
               if (err) throw err;
               console.log("Added Department");
@@ -109,18 +102,18 @@ function menu() {
           );
         });
         // Update employee
-    } else if (answers.menuOption === "Update Employee") {
+      } else if (answers.menuOption === "Update Employee Role") {
         updateEmployee().then((data) => {
           db.query(
-            `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?)`,
+            `UPDATE employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?)`,
             [
-                data.employeeFirstName,
-                data.employeeLastName,
-                data.departmentRole,
+              data.employeeFirstName,
+              data.employeeLastName,
+              data.departmentRole,
             ],
             (err, result) => {
               if (err) throw err;
-              console.log("Updated Employee");
+              console.log("Updated Employee Role");
               menu();
             }
           );
@@ -170,12 +163,12 @@ function addRole() {
     {
       type: "input",
       message: "What is the salary of the role?",
-      name: "salaryRole",
+      name: "roleSalary",
     },
     {
       type: "input",
       message: "Which department does the role belong to?",
-      name: "departmentRole",
+      name: "roleDepartment",
     },
   ]);
 }
@@ -197,11 +190,7 @@ function updateEmployee() {
     {
       type: "list",
       message: "Which employee's role do you want to update?",
-      choices: [
-        "John Smith",
-        "Bob Smith",
-        "Justin Brown",
-      ],
+      choices: ["John Smith", "Bob Smith", "Justin Brown"],
       name: "employeeUpdate",
     },
   ]);
