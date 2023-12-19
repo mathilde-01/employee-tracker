@@ -28,4 +28,4 @@ WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database   
 
 ## Credits
-(Bootcampspot)[https://bootcampspot.instructure.com/courses/4347/assignments/62233?module_item_id=1081923]
+[Bootcampspot](https://bootcampspot.instructure.com/courses/4347/assignments/62233?module_item_id=1081923)
