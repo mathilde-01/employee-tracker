@@ -66,11 +66,12 @@ function menu() {
             [
               data.employeeFirstName,
               data.employeeLastName,
-              data.departmentRole,
+              data.employeeRole,
+              data.employeeManager,
             ],
             (err, result) => {
               if (err) throw err;
-              console.log("Added Role");
+              console.log("Added Employee");
               menu();
             }
           );
@@ -83,7 +84,7 @@ function menu() {
             [data.roleName, data.roleSalary, data.roleDepartment],
             (err, result) => {
               if (err) throw err;
-              console.log("Added Employee");
+              console.log("Added role");
               menu();
             }
           );
@@ -104,21 +105,42 @@ function menu() {
         // Update employee
       } else if (answers.menuOption === "Update Employee Role") {
         updateEmployee().then((data) => {
+          console.log(data);
+          //   let first_name = data.employeeUpdate(" ")[0];
+          let employeeName = data.employeeUpdate;
+          // Fetch employee info
           db.query(
-            `UPDATE employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?)`,
-            [
-              data.employeeFirstName,
-              data.employeeLastName,
-              data.departmentRole,
-            ],
+            "SELECT * FROM employee WHERE CONCAT(first_name, ' ', last_name) = ?",
+            [employeeName],
             (err, result) => {
               if (err) throw err;
-              console.log("Updated Employee Role");
-              menu();
+              const employee = result[0];
+              // Prompt user for new role information
+              inquirer
+                .prompt([
+                  {
+                    type: "input",
+                    message: `Enter the new role for ${employeeName}:`,
+                    name: "newRole",
+                  },
+                ])
+                .then((updateData) => {
+                  // Update employee role
+                  db.query(
+                    "UPDATE employee SET role_id=? WHERE id=?",
+                    [updateData.newRole, employee.id],
+                    (err, result) => {
+                      if (err) throw err;
+                      console.log("Updated Employee Role");
+                      menu();
+                    }
+                  );
+                });
             }
           );
         });
       } else if (answers.menuOption === "Exit") {
+        console.log("Good-bye!");
         process.exit();
       } else {
         console.log("Error has occured", answers);
@@ -126,7 +148,7 @@ function menu() {
     });
 }
 
-// Add employee funciton
+// Add employee function
 function addEmployee() {
   return inquirer.prompt([
     {
@@ -141,7 +163,7 @@ function addEmployee() {
     },
     {
       type: "input",
-      message: "What is the employee's role?",
+      message: "What is the employee's role ID?",
       name: "employeeRole",
     },
     {
@@ -190,7 +212,7 @@ function updateEmployee() {
     {
       type: "list",
       message: "Which employee's role do you want to update?",
-      choices: ["John Smith", "Bob Smith", "Justin Brown"],
+      choices: ["John Smith", "Bob Smith", "Julia Jones"],
       name: "employeeUpdate",
     },
   ]);

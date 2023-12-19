@@ -1,5 +1,8 @@
 # employee-tracker
 
+## Description
+This command-line application allows users to manage a company's employee database, using Node.js, Inquirer, and MySQL.  
+
 ## User Story
 AS A business owner  
 I WANT to be able to view and manage the departments, roles, and employees in my company  
@@ -25,3 +28,4 @@ WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database   
 
 ## Credits
+(Bootcampspot)[https://bootcampspot.instructure.com/courses/4347/assignments/62233?module_item_id=1081923]
